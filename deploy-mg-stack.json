@@ -1,0 +1,227 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.24.24.22086",
+        "templateHash": "3794881317040030448"
+      }
+    },
+    "parameters": {
+      "subscriptionID": {
+        "type": "string"
+      },
+      "deployLocation": {
+        "type": "string",
+        "defaultValue": "[deployment().location]"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2022-09-01",
+        "name": "deployToSub",
+        "subscriptionId": "[parameters('subscriptionID')]",
+        "location": "[deployment().location]",
+        "properties": {
+          "expressionEvaluationOptions": {
+            "scope": "inner"
+          },
+          "mode": "Incremental",
+          "parameters": {
+            "resourceGroupLocation": {
+              "value": "[parameters('deployLocation')]"
+            }
+          },
+          "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.24.24.22086",
+                "templateHash": "12779119304193072368"
+              }
+            },
+            "parameters": {
+              "resourceGroupName1": {
+                "type": "string",
+                "defaultValue": "stackdemo-rg1"
+              },
+              "resourceGroupName2": {
+                "type": "string",
+                "defaultValue": "stackdemo-rg2"
+              },
+              "resourceGroupLocation": {
+                "type": "string",
+                "defaultValue": "[deployment().location]"
+              }
+            },
+            "resources": [
+              {
+                "type": "Microsoft.Resources/resourceGroups",
+                "apiVersion": "2023-07-01",
+                "name": "[parameters('resourceGroupName1')]",
+                "location": "[parameters('resourceGroupLocation')]"
+              },
+              {
+                "type": "Microsoft.Resources/resourceGroups",
+                "apiVersion": "2023-07-01",
+                "name": "[parameters('resourceGroupName2')]",
+                "location": "[parameters('resourceGroupLocation')]"
+              },
+              {
+                "condition": "[equals(parameters('resourceGroupName1'), 'stackdemo-rg1')]",
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2022-09-01",
+                "name": "[uniqueString(parameters('resourceGroupName1'))]",
+                "resourceGroup": "[parameters('resourceGroupName1')]",
+                "properties": {
+                  "expressionEvaluationOptions": {
+                    "scope": "inner"
+                  },
+                  "mode": "Incremental",
+                  "parameters": {
+                    "location": {
+                      "value": "[parameters('resourceGroupLocation')]"
+                    }
+                  },
+                  "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "metadata": {
+                      "_generator": {
+                        "name": "bicep",
+                        "version": "0.24.24.22086",
+                        "templateHash": "8847370818438176730"
+                      }
+                    },
+                    "parameters": {
+                      "location": {
+                        "type": "string",
+                        "defaultValue": "[resourceGroup().location]"
+                      },
+                      "storageAccountName1": {
+                        "type": "string",
+                        "defaultValue": "[format('stackstore1{0}', uniqueString(resourceGroup().id))]"
+                      },
+                      "storageAccountName2": {
+                        "type": "string",
+                        "defaultValue": "[format('stackstore2{0}', uniqueString(resourceGroup().id))]"
+                      }
+                    },
+                    "resources": [
+                      {
+                        "type": "Microsoft.Storage/storageAccounts",
+                        "apiVersion": "2023-01-01",
+                        "name": "[parameters('storageAccountName1')]",
+                        "location": "[parameters('location')]",
+                        "sku": {
+                          "name": "Standard_LRS"
+                        },
+                        "kind": "StorageV2",
+                        "properties": {
+                          "accessTier": "Hot"
+                        }
+                      },
+                      {
+                        "type": "Microsoft.Storage/storageAccounts",
+                        "apiVersion": "2023-01-01",
+                        "name": "[parameters('storageAccountName2')]",
+                        "location": "[parameters('location')]",
+                        "sku": {
+                          "name": "Standard_LRS"
+                        },
+                        "kind": "StorageV2",
+                        "properties": {
+                          "accessTier": "Hot"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "dependsOn": [
+                  "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName1'))]"
+                ]
+              },
+              {
+                "condition": "[equals(parameters('resourceGroupName2'), 'stackdemo-rg2')]",
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2022-09-01",
+                "name": "[uniqueString(parameters('resourceGroupName2'))]",
+                "resourceGroup": "[parameters('resourceGroupName2')]",
+                "properties": {
+                  "expressionEvaluationOptions": {
+                    "scope": "inner"
+                  },
+                  "mode": "Incremental",
+                  "parameters": {
+                    "location": {
+                      "value": "[parameters('resourceGroupLocation')]"
+                    }
+                  },
+                  "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "metadata": {
+                      "_generator": {
+                        "name": "bicep",
+                        "version": "0.24.24.22086",
+                        "templateHash": "8847370818438176730"
+                      }
+                    },
+                    "parameters": {
+                      "location": {
+                        "type": "string",
+                        "defaultValue": "[resourceGroup().location]"
+                      },
+                      "storageAccountName1": {
+                        "type": "string",
+                        "defaultValue": "[format('stackstore1{0}', uniqueString(resourceGroup().id))]"
+                      },
+                      "storageAccountName2": {
+                        "type": "string",
+                        "defaultValue": "[format('stackstore2{0}', uniqueString(resourceGroup().id))]"
+                      }
+                    },
+                    "resources": [
+                      {
+                        "type": "Microsoft.Storage/storageAccounts",
+                        "apiVersion": "2023-01-01",
+                        "name": "[parameters('storageAccountName1')]",
+                        "location": "[parameters('location')]",
+                        "sku": {
+                          "name": "Standard_LRS"
+                        },
+                        "kind": "StorageV2",
+                        "properties": {
+                          "accessTier": "Hot"
+                        }
+                      },
+                      {
+                        "type": "Microsoft.Storage/storageAccounts",
+                        "apiVersion": "2023-01-01",
+                        "name": "[parameters('storageAccountName2')]",
+                        "location": "[parameters('location')]",
+                        "sku": {
+                          "name": "Standard_LRS"
+                        },
+                        "kind": "StorageV2",
+                        "properties": {
+                          "accessTier": "Hot"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "dependsOn": [
+                  "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName2'))]"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }

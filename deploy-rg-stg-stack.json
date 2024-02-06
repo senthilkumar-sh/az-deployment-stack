@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+      "_generator": {
+        "name": "bicep",
+        "version": "0.24.24.22086",
+        "templateHash": "13521817103489288639"
+      }
+    },
+    "parameters": {
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]"
+      },
+      "storageAccountName": {
+        "type": "string",
+        "defaultValue": "[format('store{0}', uniqueString(resourceGroup().id))]"
+      },
+      "vnetName": {
+        "type": "string",
+        "defaultValue": "[format('vnetdemo{0}', uniqueString(resourceGroup().id))]"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2023-01-01",
+        "name": "[format('{0}demo1', parameters('storageAccountName'))]",
+        "location": "[parameters('location')]",
+        "kind": "StorageV2",
+        "sku": {
+          "name": "Standard_GRS"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2023-01-01",
+        "name": "[format('{0}demo2', parameters('storageAccountName'))]",
+        "location": "[parameters('location')]",
+        "kind": "StorageV2",
+        "sku": {
+          "name": "Standard_GRS"
+        }
+      },
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2023-05-01",
+        "name": "[parameters('vnetName')]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/16"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "Subnet-1",
+              "properties": {
+                "addressPrefix": "10.0.0.0/24"
+              }
+            },
+            {
+              "name": "Subnet-2",
+              "properties": {
+                "addressPrefix": "10.0.1.0/24"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
